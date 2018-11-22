@@ -1,3 +1,19 @@
-<p>
-  birthday-form works!
-</p>
+<section>
+  <header>
+      <h1>B<strong>earth</strong>day Image!</h1>
+  </header>
+  <article>
+    <form>
+      <input type="number" [(ngModel)]="month" name="month" placeholder="mm">
+      <input type="number" [(ngModel)]="day" name="day" placeholder="dd">
+      <input type="number" [(ngModel)]="year" name="year" placeholder="yyyy">
+      <button id="submitBDay" (click)="submitBirthday()">Enter</button>
+    </form>
+    <p>values entered are:</p>
+    <ul>
+      <li>month: {{month}}</li>
+      <li>day: {{day}}</li>
+      <li>year: {{year}}</li>
+    </ul>
+  </article>
+</section>
