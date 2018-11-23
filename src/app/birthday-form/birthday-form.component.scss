@@ -1,0 +1,37 @@
+$red: #ED171F;
+$blue: #0067B6;
+
+#bearthdayHdr, #formContent {
+    text-align: center;
+    
+}
+
+#submitBDay {
+    display: block;
+    border: none;
+    border-radius: 4px;
+    background-color: $blue;
+    color: #FFF;
+    width: 100px;
+    padding: 5px;
+    margin: 20px auto 0 auto;
+    height: 50px;
+    &:hover {
+        cursor: pointer;
+    }
+    &:focus {
+        outline: none;
+    }
+}
+
+#dateForm {
+    width: 100%;
+    input {
+        width: 28%;
+        height: 50px;
+        font-size: 1.5em;
+    }
+    #day {
+        margin: 0 3%;
+    }
+}
