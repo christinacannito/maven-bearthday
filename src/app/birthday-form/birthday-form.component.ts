@@ -97,10 +97,19 @@ export class BirthdayFormComponent implements OnInit {
     }
 
     // only if there are no errors should the request be made
+    let stringDay = self.day.toString();;
+    let stringMonth = self.month.toString();
+    if(self.day < 10) {
+      stringDay = '0' + stringDay;
+    }
+
+    if(self.month < 10) {
+      stringMonth = '0' + stringMonth;
+    }
     if(this.monthError === '' && this.dayError === '' && this.yearError === '' && this.errorMsg === '') {
-      this.nasaApiService.makeRequest(this.month, this.day, this.year).then((data) => {
-        // console.log('data in submit: ', typeof data)
+      this.nasaApiService.makeRequest(stringMonth, stringDay, this.year).then((data) => {
         var converted  = data;
+        console.log('data: ', data)
         return converted
       }, function(error) {
         console.log('error: ', error)
@@ -110,7 +119,16 @@ export class BirthdayFormComponent implements OnInit {
         birthdayData = JSON.parse(birthdayData)
         let imageName = birthdayData[0]['image']
         // console.log('imageName: ', imageName)
-        self.nasaApiService.imageRequest(imageName, self.day, self.month, self.year).then((imageUrl) => {
+        let stringDay = self.day.toString();;
+        let stringMonth = self.month.toString();
+        if(self.day < 10) {
+          stringDay = '0' + stringDay;
+        }
+
+        if(self.month < 10) {
+          stringMonth = '0' + stringMonth;
+        }
+        self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, self.year).then((imageUrl) => {
           // print the image to the screen 
           self.imageReturned = true;
           self.imageUrl = imageUrl.toString();
