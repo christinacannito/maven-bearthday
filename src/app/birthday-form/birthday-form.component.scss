@@ -49,6 +49,16 @@ $blue: #0067B6;
     animation: grow 1s infinite;
 }
 
+.earthImg {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.error {
+    color: $red;
+}
+
 @keyframes grow {
     from {
         font-size: 1em;

@@ -1,6 +1,5 @@
 <section id="introSec" *ngIf="countDownOver === false">
   <header>
-    <img src="../../assets/images/bearthday_logo.png" width="180px" height="147px" alt="Bearthday Logo">
     <h1 id="nasa" class="active">Nasa has a new mission:</h1>
     <h2 id="mission">To make you smile for you birthday.</h2>
   </header>
@@ -17,13 +16,19 @@
   <article id="formContent">
     <form id="dateForm">
       <input type="number" min="1" max="12" [(ngModel)]="month" name="month" placeholder="mm">
-      <input id="day" min="1" type="number" [(ngModel)]="day" name="day" placeholder="dd">
+      <input id="day" min="1" max="31" type="number" [(ngModel)]="day" name="day" placeholder="dd">
       <input type="number" [(ngModel)]="year" name="year" placeholder="yyyy">
       <button id="submitBDay" (click)="submitBirthday()">Enter</button>
+      <p class="error">{{this.errorMsg }}</p>
+      <p class="error">{{this.monthError}}</p>
+      <p class="error">{{this.dayError}}</p>
+      <p class="error">{{this.yearError}}</p>
     </form>
     <div *ngIf="imageReturned === true">
       <h2>Your Bearthday image!</h2>
-      <img src="{{imageUrl}}" width="100%" height="auto" alt="">
+      <a href="/savedImages">See your saved images</a>
+      <p>Click on the image to save it.</p>
+      <img src="{{imageUrl}}" class="earthImg" (click)="saveImage()" width="100%" height="auto" alt="">
     </div>
   </article>
 </section>
