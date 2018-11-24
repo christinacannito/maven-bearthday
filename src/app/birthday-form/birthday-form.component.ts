@@ -71,13 +71,10 @@ export class BirthdayFormComponent implements OnInit {
     dateEntered = new Date(dateEntered[0], dateEntered[1], dateEntered[2])
     let outputArray = toJsonDates.map(this.convertToDates)
     let closestDate = outputArray.sort((a, b) => {
-      // console.log('a: ', a)
-
       var distancea = Math.abs(dateEntered - a);
       var distanceb = Math.abs(dateEntered - b);
       return distancea - distanceb;
     })[0]
-    console.log('closest date is...', closestDate)
     return closestDate;
   }
 
