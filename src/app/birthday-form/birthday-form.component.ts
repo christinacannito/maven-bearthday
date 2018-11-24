@@ -52,6 +52,34 @@ export class BirthdayFormComponent implements OnInit {
     }, 1000);
   }
 
+  convertToDates = (date) => {
+    console.log('date: ', date)
+    let dateString = date['date'];
+    let dateArray = dateString.split('-')
+    let dateConverted = new Date(parseInt(dateArray[0]), parseInt(dateArray[1]) - 1, parseInt(dateArray[2]))
+    return dateConverted;
+  }
+
+  findClosestDate = (dateEntered: any, datesAvailable) => {
+    console.log('testing converting date: ', new Date(dateEntered[0], dateEntered[1], dateEntered[2]))
+    // you want to compare the date they entered with the dates that are available
+    console.log('datesAvailable: ', typeof datesAvailable)
+    let toJsonDates = JSON.parse(datesAvailable)
+    console.log('toJsonDates: ', toJsonDates)
+    // you should convert the closestDate array first an array of dates 
+    dateEntered = new Date(dateEntered[0], dateEntered[1], dateEntered[2])
+    let outputArray = toJsonDates.map(this.convertToDates)
+    let closestDate = outputArray.sort((a, b) => {
+      // console.log('a: ', a)
+
+      var distancea = Math.abs(dateEntered - a);
+      var distanceb = Math.abs(dateEntered - b);
+      return distancea - distanceb;
+    })[0]
+    console.log('closest date is...', closestDate)
+    return closestDate;
+  }
+
   submitBirthday = () => {
     let self = this;
     // first you have to make sure that the inputs are correct
@@ -63,7 +91,7 @@ export class BirthdayFormComponent implements OnInit {
     if(this.year > yyyy) {
       this.errorMsg = 'Date entered can not be in the future!'
     } else if (this.year === yyyy) {
-      if (this.month >= mm && this.day >= dd){
+      if (this.month <= mm && this.day <= dd){
         this.errorMsg = '';
       } else {
         this.errorMsg = 'Date entered can not be in the future!'
@@ -109,7 +137,19 @@ export class BirthdayFormComponent implements OnInit {
     if(this.monthError === '' && this.dayError === '' && this.yearError === '' && this.errorMsg === '') {
       this.nasaApiService.makeRequest(stringMonth, stringDay, this.year).then((data) => {
         var converted  = data;
-        console.log('data: ', data)
+        console.log('data: ', typeof data)
+        if(data === '[]') {
+          // find the closest date to the one they entered 
+          // you will have to make a request to see all the available dates
+          // first you will need to get all the available dates 
+          // year-month-day
+          let stringYear = this.year.toString()
+          let compiledYear = [self.year, self.month - 1, self.day];
+          self.nasaApiService.getAllAvailableDates().then((data) => {
+            console.log('data in all images: ', data)
+            self.findClosestDate(compiledYear, data)
+          })
+        }
         return converted
       }, function(error) {
         console.log('error: ', error)

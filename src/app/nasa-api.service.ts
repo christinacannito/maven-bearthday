@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 export class NasaApiService {
   url:string = "https://api.nasa.gov/EPIC/api/enhanced/date/";
   key: string = "9JJprXB7NZaXke1ZjIyFwOOh5s6G0zXCIq79fZZ7";
-  imageUrl: string = "https://epic.gsfc.nasa.gov/archive/enhanced/"
+  imageUrl: string = "https://epic.gsfc.nasa.gov/archive/enhanced/";
+  allAvailableDatesUrl = 'https://api.nasa.gov/EPIC/api/enhanced/all?api_key=';
 
   constructor() {}
 
@@ -24,6 +25,38 @@ export class NasaApiService {
         if (req.status == 200) {
           // Resolve the promise with the response text
           console.log('req.response: ', JSON.parse(req.response))
+          resolve(req.response);
+        }
+        else {
+          // Otherwise reject with the status text
+          // which will hopefully be a meaningful error
+          reject(Error(req.statusText));
+        }
+      };
+      // Handle network errors
+      req.onerror = function() {
+        reject(Error("Network Error"));
+      };
+      // Make the request
+      req.send();
+    });
+  }
+
+  getAllAvailableDates = () => {
+    let self = this;
+    return new Promise(function(resolve, reject) {
+      var req = new XMLHttpRequest();
+      // console.log('month: ', month, 'day: ', day, 'year: ', year)
+      //2015/11/22/png/epic_RGB_20151122001751.png
+      let allImagesUrl = self.allAvailableDatesUrl + self.key
+      
+      req.open('GET', allImagesUrl);
+      req.onload = function() {
+        // This is called even on 404 etc
+        // so check the status
+        if (req.status == 200) {
+          // Resolve the promise with the response text
+          // console.log('req.response: ', req.response)
           resolve(req.response);
         }
         else {
