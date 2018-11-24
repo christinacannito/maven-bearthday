@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { ResultsComponent } from './results/results.component';
 import { BirthdayFormComponent } from './birthday-form/birthday-form.component';
 import { ErrorComponent } from './error/error.component';
+import { IntroComponent } from './intro/intro.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ResultsComponent,
     BirthdayFormComponent,
-    ErrorComponent
+    ErrorComponent,
+    IntroComponent
   ],
   imports: [
     BrowserModule,

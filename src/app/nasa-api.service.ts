@@ -25,7 +25,7 @@ export class NasaApiService {
         // so check the status
         if (req.status == 200) {
           // Resolve the promise with the response text
-          // console.log('req.response: ', req.response)
+          console.log('req.response: ', JSON.parse(req.response))
           resolve(req.response);
         }
         else {

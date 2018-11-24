@@ -30,8 +30,22 @@ $blue: #0067B6;
         width: 28%;
         height: 50px;
         font-size: 1.5em;
+        border: 2px solid $blue;
     }
     #day {
         margin: 0 3%;
     }
 }
+
+@media screen and (max-width: 400px) {
+    #dateForm {
+      input {
+          display: block;
+          width: 70%;
+          margin: 0 auto;
+      }
+      #day {
+          margin: 3% auto;
+      }
+    }
+  }
