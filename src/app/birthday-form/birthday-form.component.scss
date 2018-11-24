@@ -6,6 +6,10 @@ $blue: #0067B6;
     
 }
 
+#introSec {
+    text-align: center;
+}
+
 #submitBDay {
     display: block;
     border: none;
@@ -30,8 +34,49 @@ $blue: #0067B6;
         width: 28%;
         height: 50px;
         font-size: 1.5em;
+        border: 2px solid $blue;
     }
     #day {
         margin: 0 3%;
     }
 }
+
+#countDown.active {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    -webkit-animation: grow 1s infinite; /* Safari 4.0 - 8.0 */
+    animation: grow 1s infinite;
+}
+
+.earthImg {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.error {
+    color: $red;
+}
+
+@keyframes grow {
+    from {
+        font-size: 1em;
+    }
+    to {
+        font-size: 2em;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #dateForm {
+      input {
+          display: block;
+          width: 70%;
+          margin: 0 auto;
+      }
+      #day {
+          margin: 3% auto;
+      }
+    }
+  }
