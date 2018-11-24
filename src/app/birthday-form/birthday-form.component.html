@@ -26,8 +26,8 @@
     </form>
     <div *ngIf="imageReturned === true">
       <h2>Your Bearthday image!</h2>
-      <a href="/savedImages">See your saved images</a>
       <p>Click on the image to save it.</p>
+      <h3>{{birthDayDate}}</h3>
       <img src="{{imageUrl}}" class="earthImg" (click)="saveImage()" width="100%" height="auto" alt="">
     </div>
   </article>

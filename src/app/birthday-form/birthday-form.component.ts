@@ -25,6 +25,7 @@ export class BirthdayFormComponent implements OnInit {
   imageReturned: boolean = false;
   savedImages: Array<string> = [];
   makeRequest: boolean = true;
+  birthDayDate: string;
 
   constructor(private nasaApiService: NasaApiService, @Inject(SESSION_STORAGE) private storage: StorageService) { }
 
@@ -149,6 +150,7 @@ export class BirthdayFormComponent implements OnInit {
         // console.log('imageName: ', imageName)
         let stringDay = self.day.toString();;
         let stringMonth = self.month.toString();
+        let stringYear = self.year.toString();
 
         if(birthdayData[0] === undefined) {
           // let stringYear = this.year.toString()
@@ -168,6 +170,7 @@ export class BirthdayFormComponent implements OnInit {
             // you then need to get the image name for that date you found 
             let foundDayString = foundDay.toString();
             let foundMonthString = foundMonth.toString();
+            let foundYearString = foundYear.toString();
             this.nasaApiService.makeRequest(foundMonthString, foundDayString, foundYear).then((birthdayData: string) => {
               console.log('birthdayData: ', birthdayData)
               birthdayData = JSON.parse(birthdayData)
@@ -177,6 +180,7 @@ export class BirthdayFormComponent implements OnInit {
               self.nasaApiService.imageRequest(imageName, foundDayString, foundMonthString, foundYear).then((imageUrl) => {
                 // print the image to the screen 
                 self.imageReturned = true;
+                self.birthDayDate = "Your birthday wasn't found, but here is the image of the Earth from the closest date. Date is: " + foundMonthString + '/' + foundDayString + '/' + foundYearString;
                 self.imageUrl = imageUrl.toString();
               })
             })
@@ -193,11 +197,10 @@ export class BirthdayFormComponent implements OnInit {
           self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, self.year).then((imageUrl) => {
             // print the image to the screen 
             self.imageReturned = true;
+            self.birthDayDate = "Your birthday was found! " + stringMonth + '/' +stringDay + '/' + stringYear;
             self.imageUrl = imageUrl.toString();
           })
         }
-        
-       
       })
     }
   }
