@@ -6,9 +6,7 @@ import { Injectable } from '@angular/core';
 export class NasaApiService {
   url:string = "https://api.nasa.gov/EPIC/api/enhanced/date/";
   key: string = "9JJprXB7NZaXke1ZjIyFwOOh5s6G0zXCIq79fZZ7";
-  // imageUrl: string = "https://epic.gsfc.nasa.gov/archive/enhanced/2015/11/22/png/epic_RGB_20151122001751.png";
   imageUrl: string = "https://epic.gsfc.nasa.gov/archive/enhanced/"
-  // the url above is to get the actual image that you will find when you get the data back from the first request
 
   constructor() {}
 
