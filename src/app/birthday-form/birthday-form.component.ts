@@ -138,18 +138,6 @@ export class BirthdayFormComponent implements OnInit {
       this.nasaApiService.makeRequest(stringMonth, stringDay, this.year).then((data) => {
         var converted  = data;
         console.log('data: ', typeof data)
-        if(data === '[]') {
-          // find the closest date to the one they entered 
-          // you will have to make a request to see all the available dates
-          // first you will need to get all the available dates 
-          // year-month-day
-          let stringYear = this.year.toString()
-          let compiledYear = [self.year, self.month - 1, self.day];
-          self.nasaApiService.getAllAvailableDates().then((data) => {
-            console.log('data in all images: ', data)
-            self.findClosestDate(compiledYear, data)
-          })
-        }
         return converted
       }, function(error) {
         console.log('error: ', error)
@@ -157,22 +145,59 @@ export class BirthdayFormComponent implements OnInit {
         // console.log('birthdayData: ', JSON.parse(birthdayData))
         // get the image from the birthday
         birthdayData = JSON.parse(birthdayData)
-        let imageName = birthdayData[0]['image']
+        let imageName;
         // console.log('imageName: ', imageName)
         let stringDay = self.day.toString();;
         let stringMonth = self.month.toString();
-        if(self.day < 10) {
-          stringDay = '0' + stringDay;
-        }
 
-        if(self.month < 10) {
-          stringMonth = '0' + stringMonth;
+        if(birthdayData[0] === undefined) {
+          // let stringYear = this.year.toString()
+          let compiledYear = [self.year, self.month - 1, self.day];
+          self.nasaApiService.getAllAvailableDates().then((data) => {
+            console.log('data in all images: ', data)
+            return self.findClosestDate(compiledYear, data)
+          }).then((foundDate) => {
+            // now that you have the response back you can make the request for the closet date found
+            // setImage name here
+            // imageName = ? 
+            // Mon Nov 12 2018 00:00:00 GMT-0500 (Eastern Standard Time) // date is returned like this
+            var foundDay = foundDate.getDate();
+            var foundMonth = foundDate.getMonth()+1; //January is 0!
+            var foundYear = foundDate.getFullYear();
+            console.log('closest date in the then statement, day: ', foundDay, ' month: ', foundMonth, ' year: ', foundYear)
+            // you then need to get the image name for that date you found 
+            let foundDayString = foundDay.toString();
+            let foundMonthString = foundMonth.toString();
+            this.nasaApiService.makeRequest(foundMonthString, foundDayString, foundYear).then((birthdayData: string) => {
+              console.log('birthdayData: ', birthdayData)
+              birthdayData = JSON.parse(birthdayData)
+              imageName = birthdayData[0]['image']
+              console.log('birthdayData[0]: ', birthdayData[0])
+              console.log('imageName when cant find: ', imageName)
+              self.nasaApiService.imageRequest(imageName, foundDayString, foundMonthString, foundYear).then((imageUrl) => {
+                // print the image to the screen 
+                self.imageReturned = true;
+                self.imageUrl = imageUrl.toString();
+              })
+            })
+          })
+        } else {
+          imageName = birthdayData[0]['image']
+          if(self.day < 10) {
+            stringDay = '0' + stringDay;
+          }
+  
+          if(self.month < 10) {
+            stringMonth = '0' + stringMonth;
+          }
+          self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, self.year).then((imageUrl) => {
+            // print the image to the screen 
+            self.imageReturned = true;
+            self.imageUrl = imageUrl.toString();
+          })
         }
-        self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, self.year).then((imageUrl) => {
-          // print the image to the screen 
-          self.imageReturned = true;
-          self.imageUrl = imageUrl.toString();
-        })
+        
+       
       })
     }
   }
