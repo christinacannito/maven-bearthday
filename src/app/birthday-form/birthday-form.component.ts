@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NasaApiService } from '../nasa-api.service';
+import { ConsoleReporter } from 'jasmine';
 
 @Component({
   selector: 'app-birthday-form',
@@ -11,19 +12,41 @@ export class BirthdayFormComponent implements OnInit {
   day: number;
   year: number;
   imageUrl: string;
+  countDownOver: boolean = false;
+  countDown: number = 3;
+  count: number = 3;
+  enter: boolean = false;
 
   constructor(private nasaApiService: NasaApiService) { }
 
-  ngOnInit = () => {
+  ngOnInit(): void {
+    this.startCountDown();
+  }
 
+  startCountDown = () => {
+    let seconds_left = 3;
+    let self = this;
+    
+    // console.log('countCounter: ', countContainer)
+    const interval = setInterval(function() {
+        seconds_left--
+        console.log('seconds left: ', seconds_left)
+        self.count = seconds_left;
+
+        if (seconds_left < 0) {
+          self.count = 0
+          clearInterval(interval);
+          let countContainer = document.getElementById('countDown');
+          countContainer.classList.remove('active');
+          self.enter = true;
+        }
+    }, 1000);
   }
 
   submitBirthday = () => {
-    // here you can make the call to the service 
     let self = this;
     this.nasaApiService.makeRequest(this.month, this.day, this.year).then((data) => {
       console.log('data in submit: ', typeof data)
-      // make the request for the image
       var converted  = data;
       return converted
     }, function(error) {
@@ -35,10 +58,13 @@ export class BirthdayFormComponent implements OnInit {
       let imageName = birthdayData[0]['image']
       console.log('imageName: ', imageName)
       self.nasaApiService.imageRequest(imageName, self.day, self.month, self.year).then((imageUrl) => {
-        // console.log('imageUrl typeof: ', typeof(imageUrl))
         // print the image to the screen 
         self.imageUrl = imageUrl.toString();
       })
     })
+  }
+
+  enterSite = () => {
+    this.countDownOver = true;
   }
 }

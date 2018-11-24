@@ -1,5 +1,16 @@
-<app-intro></app-intro>
-<section>
+<section id="introSec" *ngIf="countDownOver === false">
+  <header>
+    <img src="../../assets/images/bearthday_logo.png" width="180px" height="147px" alt="Bearthday Logo">
+    <h1 id="nasa" class="active">Nasa has a new mission:</h1>
+    <h2 id="mission">To make you smile for you birthday.</h2>
+  </header>
+  <article>
+    <p id="intro">To view your special bearthday image from Nasa fill out the form:</p>
+    <p id="countDown" *ngIf="enter === false;" class="active">{{count}}</p>
+    <button (click)="enterSite()" *ngIf="enter === true">Enter site</button>
+  </article>  
+</section>
+<section *ngIf="countDownOver === true">
   <header id="bearthdayHdr">
       <h1>B<strong>earth</strong>day Image!</h1>
   </header>

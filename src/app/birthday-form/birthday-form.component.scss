@@ -6,6 +6,10 @@ $blue: #0067B6;
     
 }
 
+#introSec {
+    text-align: center;
+}
+
 #submitBDay {
     display: block;
     border: none;
@@ -34,6 +38,23 @@ $blue: #0067B6;
     }
     #day {
         margin: 0 3%;
+    }
+}
+
+#countDown.active {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    -webkit-animation: grow 1s infinite; /* Safari 4.0 - 8.0 */
+    animation: grow 1s infinite;
+}
+
+@keyframes grow {
+    from {
+        font-size: 1em;
+    }
+    to {
+        font-size: 2em;
     }
 }
 
