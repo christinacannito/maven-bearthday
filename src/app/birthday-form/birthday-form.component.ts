@@ -133,7 +133,7 @@ export class BirthdayFormComponent implements OnInit {
     let stringMonth = self.month.toString();
     let stringYear = self.year.toString();
     stringDay = this.checkIfNumberNeedsZero(self.day)
-    console.log('stringDay top: ', stringDay)
+    // console.log('stringDay top: ', stringDay)
     stringMonth = this.checkIfNumberNeedsZero(self.month)
     stringYear = this.checkIfNumberNeedsZero(self.year)
     if(this.monthError === '' && this.dayError === '' && this.yearError === '' && this.errorMsg === '') {
@@ -171,7 +171,7 @@ export class BirthdayFormComponent implements OnInit {
           })
         } else {
           imageName = birthdayData[0]['image']
-          console.log('stringday: ', stringDay)
+          // console.log('stringday: ', stringDay)
           self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, self.year).then((imageUrl) => {
             self.imageReturned = true;
             self.birthDayDate = "Your birthday was found! " + stringMonth + '/' +stringDay + '/' + stringYear;

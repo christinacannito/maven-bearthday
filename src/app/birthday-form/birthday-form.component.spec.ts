@@ -60,5 +60,36 @@ describe('BirthdayFormComponent', () => {
     })
   })
 
-  
+  describe('should show correct error message for month', () => {
+    it('after a user enters in their birthday the error messages should display if date entered is not correct', () => {
+      component.month = 22;
+      component.day = 22;
+      component.year = 2018;
+      
+      component.errorMessages();
+      expect(component.monthError).toBe('Month must be less than 13')
+    })
+  })
+
+  describe('should show correct error message for day', () => {
+    it('after a user enters in their birthday the error messages should display if date entered is not correct', () => {
+      component.month = 2;
+      component.day = 232;
+      component.year = 2018;
+      
+      component.errorMessages();
+      expect(component.dayError).toBe('Day you entered can not be over 31.')
+    })
+  })
+
+  describe('should show correct error message for year', () => {
+    it('after a user enters in their birthday the error messages should display if date entered is not correct', () => {
+      component.month = 2;
+      component.day = 23;
+      component.year = 2020;
+      
+      component.errorMessages();
+      expect(component.errorMsg).toBe('Date entered can not be in the future!')
+    })
+  })
 });
