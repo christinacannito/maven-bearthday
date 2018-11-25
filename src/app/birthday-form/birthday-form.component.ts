@@ -24,6 +24,9 @@ export class BirthdayFormComponent implements OnInit {
   savedImages: Array<string> = [];
   makeRequest: boolean = true;
   birthDayDate: string;
+  stringDay: string;
+  stringMonth: string;
+  stringYear: string;
 
   constructor(private nasaApiService: NasaApiService, @Inject(SESSION_STORAGE) private storage: StorageService) { }
 
@@ -35,7 +38,6 @@ export class BirthdayFormComponent implements OnInit {
     let seconds_left = 3;
     let self = this;
     
-    // console.log('countCounter: ', countContainer)
     const interval = setInterval(function() {
         seconds_left--
         console.log('seconds left: ', seconds_left)
@@ -55,24 +57,14 @@ export class BirthdayFormComponent implements OnInit {
     console.log('date: ', date)
     let dateString = date['date'];
     let dateArray = dateString.split('-')
-    // comes in as year month day
     let dateConverted = new Date(parseInt(dateArray[0]), parseInt(dateArray[1]) - 1, parseInt(dateArray[2]), 0, 0, 0, 0 )
     return dateConverted;
   }
 
-  // print the image to the screen 
   findClosestDate = (dateEntered: any, datesAvailable) => {
-    // year / month / day
-    // console.log('testing converting date: ', new Date(dateEntered[0], dateEntered[1], dateEntered[2]))
-    // you want to compare the date they entered with the dates that are available
-    // console.log('datesAvailable: ', typeof datesAvailable)
     let toJsonDates = JSON.parse(datesAvailable)
-    // console.log('toJsonDates: ', toJsonDates)
-    // you should convert the closestDate array first an array of dates 
     dateEntered = new Date(dateEntered[0], dateEntered[1], dateEntered[2], 0, 0, 0, 0 )
-    // console.log('dateEnted in find closest: ', dateEntered) // correct
     let outputArray = toJsonDates.map(this.convertToDates)
-    // console.log('outputArray to check agaisnt: ', outputArray)
     let closestDate = outputArray.sort((a, b) => {
       var distancea = Math.abs(dateEntered - a);
       var distanceb = Math.abs(dateEntered - b);
@@ -82,14 +74,11 @@ export class BirthdayFormComponent implements OnInit {
     return closestDate;
   }
 
-  submitBirthday = () => {
-    let self = this;
-    // first you have to make sure that the inputs are correct
+  errorMessages = () => {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
     var yyyy = today.getFullYear();
-    // console.log('day: ', dd, ' mm: ', mm, ' yyyy: ', yyyy)
     if(this.year > yyyy) {
       this.errorMsg = 'Date entered can not be in the future!'
     } else if (this.year === yyyy) {
@@ -112,7 +101,6 @@ export class BirthdayFormComponent implements OnInit {
     }
 
     if(this.day > 31) {
-      console.log('DAY IS CORRECT')
       this.dayError = 'Day you entered can not be over 31.';
     } else if (this.day < 1) {
       this.dayError = 'Day needs to be greater than 0.';
@@ -125,8 +113,12 @@ export class BirthdayFormComponent implements OnInit {
     } else {
       this.yearError = 'Year you entered was not correct, please try again';
     }
+  }
 
-    // only if there are no errors should the request be made
+  submitBirthday = () => {
+    let self = this;
+    this.errorMessages();
+
     let stringDay = self.day.toString();;
     let stringMonth = self.month.toString();
     if(self.day < 10) {
@@ -142,11 +134,9 @@ export class BirthdayFormComponent implements OnInit {
       }, function(error) {
         console.log('error: ', error)
       }).then((birthdayData: string) => {
-        // console.log('birthdayData: ', JSON.parse(birthdayData))
-        // get the image from the birthday
         birthdayData = JSON.parse(birthdayData)
         let imageName;
-        console.log('imageName: ', imageName) // must be undefined
+        console.log('imageName: ', imageName)
         let stringDay = self.day.toString();;
         let stringMonth = self.month.toString();
         let stringYear = self.year.toString();
@@ -154,13 +144,11 @@ export class BirthdayFormComponent implements OnInit {
           let compiledYear = [self.year, self.month - 1, self.day];
           self.nasaApiService.getAllAvailableDates().then((data) => {
             console.log('data in all images: ', data)
-            return self.findClosestDate(compiledYear, data) // this is correct
+            return self.findClosestDate(compiledYear, data)
           }).then((foundDate) => {
             var foundDay = foundDate.getDate();
             var foundMonth = foundDate.getMonth()+1;
             var foundYear = foundDate.getFullYear();
-            // console.log('closest date in the then statement, day: ', foundDay, ' month: ', foundMonth, ' year: ', foundYear)
-            // you then need to get the image name for that date you found 
             let foundDayString = foundDay.toString();
             let foundMonthString = foundMonth.toString();
             let foundYearString = foundYear.toString();
@@ -172,13 +160,10 @@ export class BirthdayFormComponent implements OnInit {
               foundMonthString = '0' + foundMonthString;
             }
             this.nasaApiService.makeRequest(foundMonthString, foundDayString, foundYear).then((birthdayData: string) => {
-              // console.log('birthdayData: ', birthdayData)
               birthdayData = JSON.parse(birthdayData)
               imageName = birthdayData[0]['image']
-              // console.log('birthdayData[0]: ', birthdayData[0])
               console.log('imageName when cant find: ', imageName)
               self.nasaApiService.imageRequest(imageName, foundDayString, foundMonthString, foundYear).then((imageUrl) => {
-                // print the image to the screen 
                 self.imageReturned = true;
                 self.birthDayDate = "Your birthday wasn't found, but here is the image of the Earth from the closest date. Date is: " + foundMonthString + '/' + foundDayString + '/' + foundYearString;
                 self.imageUrl = imageUrl.toString();
@@ -187,13 +172,13 @@ export class BirthdayFormComponent implements OnInit {
           })
         } else {
           imageName = birthdayData[0]['image']
-          if(self.day < 10) {
-            stringDay = '0' + stringDay;
-          }
+          // if(self.day < 10) {
+          //   stringDay = '0' + stringDay;
+          // }
   
-          if(self.month < 10) {
-            stringMonth = '0' + stringMonth;
-          }
+          // if(self.month < 10) {
+          //   stringMonth = '0' + stringMonth;
+          // }
           self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, self.year).then((imageUrl) => {
             self.imageReturned = true;
             self.birthDayDate = "Your birthday was found! " + stringMonth + '/' +stringDay + '/' + stringYear;
