@@ -92,4 +92,12 @@ describe('BirthdayFormComponent', () => {
       expect(component.errorMsg).toBe('Date entered can not be in the future!')
     })
   })
+
+  describe('should add zero to number if less than 10', () => {
+    it('if number is less than 10 convert number to string and add zero to front of string', () => {
+      
+      let stringNumber = component.checkIfNumberNeedsZero(2);
+      expect(stringNumber).toBe('02')
+    })
+  })
 });
