@@ -56,7 +56,7 @@ export class BirthdayFormComponent implements OnInit {
     let dateString = date['date'];
     let dateArray = dateString.split('-')
     // comes in as year month day
-    let dateConverted = new Date(parseInt(dateArray[0]), parseInt(dateArray[1]) - 1, parseInt(dateArray[2]))
+    let dateConverted = new Date(parseInt(dateArray[0]), parseInt(dateArray[1]) - 1, parseInt(dateArray[2]), 0, 0, 0, 0 )
     return dateConverted;
   }
 
@@ -69,7 +69,7 @@ export class BirthdayFormComponent implements OnInit {
     let toJsonDates = JSON.parse(datesAvailable)
     // console.log('toJsonDates: ', toJsonDates)
     // you should convert the closestDate array first an array of dates 
-    dateEntered = new Date(dateEntered[0], dateEntered[1], dateEntered[2])
+    dateEntered = new Date(dateEntered[0], dateEntered[1], dateEntered[2], 0, 0, 0, 0 )
     // console.log('dateEnted in find closest: ', dateEntered) // correct
     let outputArray = toJsonDates.map(this.convertToDates)
     // console.log('outputArray to check agaisnt: ', outputArray)
@@ -210,12 +210,8 @@ export class BirthdayFormComponent implements OnInit {
 
   saveImage = () => {
     console.log('this.imageUrl was clicked: ', this.imageUrl)
-    // const earthImages = this.storage.get('savedImages') || [];
-    // this.savedImages.push(this.imageUrl);
-    // this.storage.set('savedImages', earthImages);
     this.savedImages = this.storage.get('savedImages')
     this.savedImages.push(this.imageUrl);
     this.storage.set('savedImages', this.savedImages);
-    // localStorage.setItem('savedImagesObj', JSON.stringify(this.savedImages));
   } 
 }

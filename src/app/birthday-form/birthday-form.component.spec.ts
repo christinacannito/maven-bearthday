@@ -15,7 +15,7 @@ describe('BirthdayFormComponent', () => {
   let mockStorageService;
   let date;
   let composedDate;
-  let datesAvailable;
+  let datesAvailable: string;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -30,17 +30,7 @@ describe('BirthdayFormComponent', () => {
     day = 12;
     year = 2015;
     date =  {date: "2018-11-23"};
-    datesAvailable = [
-      {"date":"2018-11-19"},
-      {"date":"2018-11-18"},
-      {"date":"2018-11-17"},
-      {"date":"2018-11-16"},
-      {"date":"2018-11-15"},
-      {"date":"2018-11-14"},
-      {"date":"2018-11-13"},
-      {"date":"2018-11-12"},
-      {"date":"2018-11-08"}
-    ]
+    datesAvailable = '[{"date":"2015-08-31"},{"date":"2015-08-27"},{"date":"2015-08-26"},{"date":"2015-08-25"},{"date":"2015-08-24"},{"date":"2015-08-23"},{"date":"2015-08-20"},{"date":"2015-08-18"},{"date":"2015-08-17"},{"date":"2015-08-12"},{"date":"2015-08-11"},{"date":"2015-08-10"},{"date":"2015-08-09"},{"date":"2015-08-08"},{"date":"2015-08-07"},{"date":"2015-08-06"},{"date":"2015-08-04"},{"date":"2015-08-03"},{"date":"2015-06-27"},{"date":"2015-06-17"}]'
 
     mockNasaService = jasmine.createSpyObj(['makeRequest', 'imageRequest'])
     mockStorageService = jasmine.createSpyObj(['get', 'set'])
@@ -62,8 +52,13 @@ describe('BirthdayFormComponent', () => {
   })
 
   describe('should be able to find the closest date if date entered was not found', () => {
-    let compiledYear = [2018, 11, 9];
-    // closest date: 
-    component.findClosestDate(compiledYear, datesAvailable);
+    it('should get the closest date', () => {
+      let compiledDate = ['2015', '06', '17'];
+      let closestDate = component.findClosestDate(compiledDate, datesAvailable);
+      let expectedDate = new Date('Mon Aug 03 2015 00:00:00 GMT-0400 (Eastern Daylight Time)')
+      expect(closestDate.getTime()).toBe(expectedDate.getTime())
+    })
   })
+
+  
 });
