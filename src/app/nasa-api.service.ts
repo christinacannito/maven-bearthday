@@ -17,14 +17,14 @@ export class NasaApiService {
       var req = new XMLHttpRequest();
       // console.log('month: ', month, 'day: ', day, 'year: ', year)
       let compiledUrl = self.url + year + '-' + month + '-' + day + '?api_key=' + self.key
-      console.log('compiled url: ', compiledUrl)
+      console.log('compiled url for the image name: ', compiledUrl)
       req.open('GET', compiledUrl);
       req.onload = function() {
         // This is called even on 404 etc
         // so check the status
         if (req.status == 200) {
           // Resolve the promise with the response text
-          console.log('req.response: ', JSON.parse(req.response))
+          console.log('req.response: ', JSON.parse(req.response)) // here is could be empty
           resolve(req.response);
         }
         else {
@@ -46,17 +46,13 @@ export class NasaApiService {
     let self = this;
     return new Promise(function(resolve, reject) {
       var req = new XMLHttpRequest();
-      // console.log('month: ', month, 'day: ', day, 'year: ', year)
-      //2015/11/22/png/epic_RGB_20151122001751.png
       let allImagesUrl = self.allAvailableDatesUrl + self.key
       
       req.open('GET', allImagesUrl);
       req.onload = function() {
-        // This is called even on 404 etc
-        // so check the status
+
         if (req.status == 200) {
-          // Resolve the promise with the response text
-          // console.log('req.response: ', req.response)
+
           resolve(req.response);
         }
         else {
