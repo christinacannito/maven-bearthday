@@ -27,6 +27,8 @@ export class BirthdayFormComponent implements OnInit {
   stringDay: string;
   stringMonth: string;
   stringYear: string;
+  imagesArray: Array<string> = [];
+  slideIndex: number = 1;
 
   constructor(private nasaApiService: NasaApiService, @Inject(SESSION_STORAGE) private storage: StorageService) { }
 
@@ -125,7 +127,7 @@ export class BirthdayFormComponent implements OnInit {
       } 
       console.log('stringMonth: ', stringMonth, 'stringDay: ', stringDay)
       this.nasaApiService.makeRequest(stringMonth, stringDay, stringYear).then((data) => {
-        console.log('stringMonth in makerequest: ', stringMonth, ' stringYear: ', stringYear)
+        // console.log('stringMonth in makerequest: ', stringMonth, ' stringYear: ', stringYear)
         return data;
       }, function(error) {
         console.log('error: ', error)
@@ -159,22 +161,59 @@ export class BirthdayFormComponent implements OnInit {
             })
           })
         } else {
-          imageName = birthdayData[0]['image']
-          console.log('stringday: ', stringDay)
-          self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, stringYear).then((imageUrl) => {
-            self.imageReturned = true;
-            self.birthDayDate = "Your birthday was found! " + stringMonth + '/' +stringDay + '/' + stringYear;
-            self.imageUrl = imageUrl.toString();
-          })
+          // console.log('stringday: ', stringDay)
+          // if there were a lot of birthday images found than get all of teh images
+          console.log('bottom birthdayData: ', birthdayData) 
+          // loop through all the birthday data and get all the images 
+          if(birthdayData.length > 1) {
+            for(let i = 0; i < birthdayData.length; i++) {
+              imageName = birthdayData[i]['image']
+              self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, stringYear).then((imageUrl) => {
+                self.imageReturned = true;
+                // self.imageUrl = imageUrl.toString();
+                self.imagesArray.push(imageUrl.toString())
+              }).then((data) => {
+                // start the slide show
+                // the first time this runs the first element in the array needs a class of active
+                if(i === birthdayData.length - 1) {
+                  self.showSlides(self.slideIndex);
+                }
+              })
+            } // end of for loop
+          } else {
+            imageName = birthdayData[0]['image']
+            self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, stringYear).then((imageUrl) => {
+              self.imageReturned = true;
+              self.imageUrl = imageUrl.toString();
+            })
+          } // end of if
+          self.birthDayDate = "Your birthday was found! " + stringMonth + '/' +stringDay + '/' + stringYear;
         }
       })
     }
   }
+
+  plusSlides = (n) => {
+    this.showSlides(this.slideIndex += n);
+  }
   
-  saveImage = () => {
-    console.log('this.imageUrl was clicked: ', this.imageUrl)
-    this.savedImages = this.storage.get('savedImages')
-    this.savedImages.push(this.imageUrl);
-    this.storage.set('savedImages', this.savedImages);
-  } 
+  showSlides = (n) => {
+    var i;
+    var slides = document.getElementsByClassName("slideImage") as HTMLCollectionOf<HTMLElement>;
+    console.log('slides: ', slides)
+    if (n > slides.length) {
+      this.slideIndex = 1
+    } 
+    if (n < 1) {
+      this.slideIndex = slides.length
+    }
+    
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none"; 
+    }
+
+    slides[this.slideIndex-1].style.display = "block"; 
+    console.log('slides[this.slideIndex-1]: ', slides[this.slideIndex - 1])
+    slides[this.slideIndex-1].classList.add('active')
+  }
 }
