@@ -117,16 +117,25 @@ export class BirthdayFormComponent implements OnInit {
     stringMonth = this.checkIfNumberNeedsZero(self.month)
     stringYear = this.checkIfNumberNeedsZero(self.year)
     if(this.monthError === '' && this.dayError === '' && this.yearError === '' && this.errorMsg === '') {
-      this.nasaApiService.makeRequest(stringMonth, stringDay, this.year).then((data) => {
+      if (this.year < 2015) {
+        // then you automatically have to return 8/3/2015 because this is the earliest day available
+        stringMonth = '08';
+        stringDay = '03'; 
+        stringYear = '2015'
+      }
+      console.log('stringMonth: ', stringMonth, 'stringDay: ', stringDay)
+      this.nasaApiService.makeRequest(stringMonth, stringDay, stringYear).then((data) => {
+        console.log('stringMonth in makerequest: ', stringMonth, ' stringYear: ', stringYear)
         return data;
       }, function(error) {
         console.log('error: ', error)
       }).then((birthdayData: string) => {
         birthdayData = JSON.parse(birthdayData)
         let imageName;
+        console.log('birthdayData: ', birthdayData)
         if(birthdayData[0] === undefined) {
           let compiledYear = [self.year, self.month - 1, self.day]; // tried
-          self.nasaApiService.getAllAvailableDates().then((data) => {
+          self.nasaApiService.getAllAvailableDates().then((data) => { // refactor to make this call only once
             return self.findClosestDate(compiledYear, data)
           }).then((foundDate) => {
             var foundDay = foundDate.getDate();
@@ -151,8 +160,8 @@ export class BirthdayFormComponent implements OnInit {
           })
         } else {
           imageName = birthdayData[0]['image']
-          // console.log('stringday: ', stringDay)
-          self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, self.year).then((imageUrl) => {
+          console.log('stringday: ', stringDay)
+          self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, stringYear).then((imageUrl) => {
             self.imageReturned = true;
             self.birthDayDate = "Your birthday was found! " + stringMonth + '/' +stringDay + '/' + stringYear;
             self.imageUrl = imageUrl.toString();
