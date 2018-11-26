@@ -114,14 +114,14 @@ export class BirthdayFormComponent implements OnInit {
     self.stringDay = self.day.toString();;
     self.stringMonth = self.month.toString();
     self.stringYear = self.year.toString();
-     self.stringDay = this.checkIfNumberNeedsZero(self.day)
+    self.stringDay = this.checkIfNumberNeedsZero(self.day)
     self.stringMonth = this.checkIfNumberNeedsZero(self.month)
     self.stringYear = this.checkIfNumberNeedsZero(self.year)
     if(this.monthError === '' && this.dayError === '' && this.yearError === '' && this.errorMsg === '') {
       if (this.year < 2015 || this.year === 2015 && this.month < 8) {
         // then you automatically have to return 8/3/2015 because this is the earliest day available
         self.stringMonth = '08';
-         self.stringDay = '03'; 
+        self.stringDay = '03'; 
         self.stringYear = '2015'
       } 
       console.log('self.stringMonth: ', self.stringMonth, ' self.stringDay: ',  self.stringDay)
@@ -149,14 +149,23 @@ export class BirthdayFormComponent implements OnInit {
             foundDayString = self.checkIfNumberNeedsZero(foundDay)
             foundMonthString = self.checkIfNumberNeedsZero(foundMonth) 
 
-            this.nasaApiService.makeRequest(foundMonthString, foundDayString, foundYear).then((birthdayData: string) => {
+            this.nasaApiService.makeRequest(foundMonthString, foundDayString, foundYear).then((birthdayData: string) => { // entered correct
               birthdayData = JSON.parse(birthdayData)
-              imageName = birthdayData[0]['image']
-              self.nasaApiService.imageRequest(imageName, foundDayString, foundMonthString, foundYear).then((imageUrl) => {
-                self.imageReturned = true;
-                self.birthDayDate = "Your birthday wasn't found, but here is the image of the Earth from the closest date. Date is: " + foundMonthString + '/' + foundDayString + '/' + foundYearString;
-                self.imageUrl = imageUrl.toString();
-              })
+              // imageName = birthdayData[0]['image']
+              // if there is more than one image found 
+              self.stringDay = foundDayString;
+              self.stringMonth = foundMonthString;
+              self.stringYear = foundYear;
+              if(birthdayData.length > 1) {
+                this.compileSlideShow(birthdayData)
+              } else {
+                imageName = birthdayData[0]['image']
+                self.nasaApiService.imageRequest(imageName, foundDayString, foundMonthString, foundYear).then((imageUrl) => {
+                  self.imageReturned = true;
+                  self.imageUrl = imageUrl.toString();
+                })
+              } // end of if
+              self.birthDayDate = "Your birthday wasn't found, but here is the image of the Earth from the closest date. Date is: " + foundMonthString + '/' + foundDayString + '/' + foundYearString;
             })
           })
         } else {
@@ -165,20 +174,6 @@ export class BirthdayFormComponent implements OnInit {
           console.log('bottom birthdayData: ', birthdayData) 
           // loop through all the birthday data and get all the images 
           if(birthdayData.length > 1) {
-            // for(let i = 0; i < birthdayData.length; i++) {
-            //   imageName = birthdayData[i]['image']
-            //   self.nasaApiService.imageRequest(imageName,  self.stringDay, self.stringMonth, self.stringYear).then((imageUrl) => {
-            //     self.imageReturned = true;
-            //     // self.imageUrl = imageUrl.toString();
-            //     self.imagesArray.push(imageUrl.toString())
-            //   }).then((data) => {
-            //     // start the slide show
-            //     // the first time this runs the first element in the array needs a class of active
-            //     if(i === birthdayData.length - 1) {
-            //       self.showSlides(self.slideIndex);
-            //     }
-            //   })
-            // } // end of for loop
             this.compileSlideShow(birthdayData)
           } else {
             imageName = birthdayData[0]['image']
