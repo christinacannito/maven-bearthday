@@ -1,19 +1,6 @@
-<section id="introSec" *ngIf="countDownOver === false">
-  <header>
-    <h1 id="nasa" class="active">Nasa has a new mission:</h1>
-    <h2 id="mission">To make you smile for you birthday.</h2>
-  </header>
-  <article>
-    <p id="intro">To view your special bearthday image from Nasa fill out the form:</p>
-    <p id="countDown" *ngIf="enter === false;" class="active">{{count}}</p>
-    <button (click)="enterSite()" *ngIf="enter === true">Enter site</button>
-  </article>  
-</section>
-<section *ngIf="countDownOver === true">
-  <header id="bearthdayHdr">
-      <h1>Enter in your birthday:</h1>
-  </header>
-  <article id="formContent">
+<section>
+  <article id="formContent" *ngIf="imageReturned === false">
+    <h1>Enter in your birthday:</h1>
     <form id="dateForm">
       <input type="number" min="1" max="12" [(ngModel)]="month" name="month" placeholder="mm">
       <input id="day" min="1" max="31" type="number" [(ngModel)]="day" name="day" placeholder="dd">
@@ -24,11 +11,12 @@
       <p class="error">{{this.dayError}}</p>
       <p class="error">{{this.yearError}}</p>
     </form>
-    <div *ngIf="imageReturned === true">
+  </article>
+  <article>  
+    <div id="returnImage" *ngIf="imageReturned === true">
       <h2>Your Bearthday image!</h2>
-      <p>Click on the image to save it.</p>
       <h3>{{birthDayDate}}</h3>
-      <img src="{{imageUrl}}" class="earthImg" (click)="saveImage()" width="100%" height="auto" alt="">
+      <img src="{{imageUrl}}" class="earthImg" width="100%" height="auto" alt="">
     </div>
   </article>
 </section>
