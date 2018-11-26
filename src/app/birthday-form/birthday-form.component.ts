@@ -31,26 +31,6 @@ export class BirthdayFormComponent implements OnInit {
   constructor(private nasaApiService: NasaApiService, @Inject(SESSION_STORAGE) private storage: StorageService) { }
 
   ngOnInit(): void {
-    this.startCountDown();
-  }
-
-  startCountDown = () => {
-    let seconds_left = 3;
-    let self = this;
-    
-    const interval = setInterval(function() {
-        seconds_left--
-        console.log('seconds left: ', seconds_left)
-        self.count = seconds_left;
-
-        if (seconds_left < 0) {
-          self.count = 0
-          clearInterval(interval);
-          let countContainer = document.getElementById('countDown');
-          countContainer.classList.remove('active');
-          self.enter = true;
-        }
-    }, 1000);
   }
 
   convertToDates = (date) => {
@@ -145,7 +125,7 @@ export class BirthdayFormComponent implements OnInit {
         birthdayData = JSON.parse(birthdayData)
         let imageName;
         if(birthdayData[0] === undefined) {
-          let compiledYear = [self.year, self.month - 1, self.day];
+          let compiledYear = [self.year, self.month - 1, self.day]; // tried
           self.nasaApiService.getAllAvailableDates().then((data) => {
             return self.findClosestDate(compiledYear, data)
           }).then((foundDate) => {
@@ -181,11 +161,7 @@ export class BirthdayFormComponent implements OnInit {
       })
     }
   }
-
-  enterSite = () => {
-    this.countDownOver = true;
-  }
-
+  
   saveImage = () => {
     console.log('this.imageUrl was clicked: ', this.imageUrl)
     this.savedImages = this.storage.get('savedImages')
