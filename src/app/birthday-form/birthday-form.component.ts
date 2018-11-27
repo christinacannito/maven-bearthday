@@ -29,6 +29,7 @@ export class BirthdayFormComponent implements OnInit {
   stringYear: string;
   imagesArray: Array<string> = [];
   slideIndex: number = 1;
+  dateForm;
 
   constructor(private nasaApiService: NasaApiService, @Inject(SESSION_STORAGE) private storage: StorageService) { }
 
@@ -229,5 +230,12 @@ export class BirthdayFormComponent implements OnInit {
     slides[this.slideIndex-1].style.display = "block"; 
     console.log('slides[this.slideIndex-1]: ', slides[this.slideIndex - 1])
     slides[this.slideIndex-1].classList.add('active')
+  }
+
+  goBack = () => {
+    this.imageReturned = false;
+    this.day = null;
+    this.month = null;
+    this.year = null;
   }
 }

@@ -14,6 +14,7 @@
   </article>
   <article>  
     <div id="returnImage" *ngIf="imageReturned === true">
+      <button (click)="goBack()" id="goBackBtn">Go back to form</button>
       <h2>Your Bearthday image!</h2>
       <h3>{{birthDayDate}}</h3>
       <img src="{{imageUrl}}" class="earthImg" width="100%" height="auto" alt="">
