@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { StorageServiceModule } from 'angular-webstorage-service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,7 +24,6 @@ import { SavedComponent } from './saved/saved.component';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    StorageServiceModule
   ],
   providers: [],
   bootstrap: [AppComponent]

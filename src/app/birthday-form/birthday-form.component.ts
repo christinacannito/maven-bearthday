@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, Injectable } from '@angular/core';
 import { NasaApiService } from '../nasa-api.service';
-import { SESSION_STORAGE, StorageService } from 'angular-webstorage-service';
 
 @Component({
   selector: 'app-birthday-form',
@@ -32,7 +31,7 @@ export class BirthdayFormComponent implements OnInit {
   multiples: boolean = false;
   errorFromAPI: string = '';
 
-  constructor(private nasaApiService: NasaApiService, @Inject(SESSION_STORAGE) private storage: StorageService) { }
+  constructor(private nasaApiService: NasaApiService) { }
 
   ngOnInit(): void {
   }

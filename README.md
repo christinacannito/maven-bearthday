@@ -1,27 +1,18 @@
 # MavenBearthday
+To run locally: 
+1. From the terminal cd into the project's directory: maven-bearthday
+2. run npm install
+3. run npm start 
+4. Go to `http://localhost:4200/`
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.5.
+## NOTE: about making requests locally
+- If you run this locally in Chrome you may have to use the following line below in order to make requests locally.
+1. open -a Google\ Chrome --args --disable-web-security --user-data-dir
 
-## Development server
+## To run tests 
+1. Run npm test 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## This application was built with the following
+1. node v11.1.0 
+2. npm 6.4.1
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

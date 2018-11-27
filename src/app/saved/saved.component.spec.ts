@@ -5,7 +5,6 @@ import { SavedComponent } from './saved.component';
 describe('SavedComponent', () => {
   let component: SavedComponent;
   let fixture: ComponentFixture<SavedComponent>;
-  let mockStorageService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -16,8 +15,7 @@ describe('SavedComponent', () => {
 
   beforeEach(() => {
     // fixture = TestBed.createComponent(SavedComponent);
-    mockStorageService = jasmine.createSpyObj(['get', 'set'])
-    component = new SavedComponent(mockStorageService)
+    component = new SavedComponent()
     // component = fixture.componentInstance;
     // fixture.detectChanges();
   });
