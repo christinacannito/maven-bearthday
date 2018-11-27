@@ -14,10 +14,7 @@ describe('SavedComponent', () => {
   }));
 
   beforeEach(() => {
-    // fixture = TestBed.createComponent(SavedComponent);
     component = new SavedComponent()
-    // component = fixture.componentInstance;
-    // fixture.detectChanges();
   });
 
   it('should create', () => {

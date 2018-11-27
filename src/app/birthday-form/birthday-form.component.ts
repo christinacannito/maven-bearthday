@@ -37,7 +37,6 @@ export class BirthdayFormComponent implements OnInit {
   }
 
   convertToDates = (date) => {
-    // console.log('date: ', date)
     let dateString = date['date'];
     let dateArray = dateString.split('-')
     let dateConverted = new Date(parseInt(dateArray[0]), parseInt(dateArray[1]) - 1, parseInt(dateArray[2]), 0, 0, 0, 0 )
@@ -53,7 +52,6 @@ export class BirthdayFormComponent implements OnInit {
       var distanceb = Math.abs(dateEntered - b);
       return distancea - distanceb;
     })[0];
-    console.log('closest date: ', closestDate)
     return closestDate;
   }
 
@@ -119,21 +117,16 @@ export class BirthdayFormComponent implements OnInit {
     self.stringMonth = this.checkIfNumberNeedsZero(self.month)
     self.stringYear = this.checkIfNumberNeedsZero(self.year)
     if(this.monthError === '' && this.dayError === '' && this.yearError === '' && this.errorMsg === '') {
-      console.log('self.stringMonth: ', self.stringMonth, ' self.stringDay: ',  self.stringDay)
       this.nasaApiService.makeRequest(self.stringMonth,  self.stringDay, self.stringYear).then((data) => {
-        // console.log('self.stringMonth in makerequest: ', self.stringMonth, ' self.stringYear: ', self.stringYear)
         return data;
       }, function(error) {
-        console.log('error: ', error)
         return error;
       }).then((birthdayData: string) => {
         birthdayData = JSON.parse(birthdayData)
         let imageName;
-        console.log('birthdayData: ', birthdayData)
         if(birthdayData[0] === undefined) {
           let compiledYear = [self.year, self.month - 1, self.day];
           if (this.year < 2015 || this.year === 2015 && this.month < 8) {
-            // then you automatically have to return 8/3/2015 because this is the earliest day available
             self.stringMonth = '08';
             self.stringDay = '03'; 
             self.stringYear = '2015'
@@ -169,7 +162,6 @@ export class BirthdayFormComponent implements OnInit {
                   self.imageReturned = true;
                   self.imageUrl = imageUrl.toString();
                 }, function(error) {
-                  console.log('error;: ', error) // you can see this
                   self.errorFromAPI = 'Error from API, image is: ' + error
                   throw new Error('abort promise chain');
                 })
@@ -180,10 +172,6 @@ export class BirthdayFormComponent implements OnInit {
             })
           })
         } else {
-          // console.log(' self.stringday: ',  self.stringDay)
-          // if there were a lot of birthday images found than get all of teh images
-          console.log('bottom birthdayData: ', birthdayData) 
-          // loop through all the birthday data and get all the images 
           if(birthdayData.length > 1) {
             this.compileSlideShow(birthdayData)
             this.multiples = true;
@@ -210,12 +198,8 @@ export class BirthdayFormComponent implements OnInit {
       imageName = birthdayDataList[i]['image']
       self.nasaApiService.imageRequest(imageName,  self.stringDay, self.stringMonth, self.stringYear).then((imageUrl) => {
         self.imageReturned = true;
-        // self.imageUrl = imageUrl.toString();
-        console.log('imageUrl: ', imageUrl);
         self.imagesArray.push(imageUrl.toString())
       }).then((data) => {
-        // start the slide show
-        // the first time this runs the first element in the array needs a class of active
         if(i === birthdayDataList.length - 1) {
           self.showSlides(self.slideIndex);
         }
@@ -230,7 +214,6 @@ export class BirthdayFormComponent implements OnInit {
   showSlides = (n) => {
     let i;
     let slides = document.getElementsByClassName("slideImage") as HTMLCollectionOf<HTMLElement>;
-    console.log('slides: ', slides)
     if (n > slides.length) {
       this.slideIndex = 1
     } 
@@ -243,7 +226,6 @@ export class BirthdayFormComponent implements OnInit {
     }
 
     slides[this.slideIndex-1].style.display = "block"; 
-    console.log('slides[this.slideIndex-1]: ', slides[this.slideIndex - 1])
     slides[this.slideIndex-1].classList.add('active')
   }
 
