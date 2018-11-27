@@ -27,6 +27,9 @@ export class BirthdayFormComponent implements OnInit {
   stringDay: string;
   stringMonth: string;
   stringYear: string;
+  imagesArray: Array<string> = [];
+  slideIndex: number = 1;
+  multiples: boolean = false;
 
   constructor(private nasaApiService: NasaApiService, @Inject(SESSION_STORAGE) private storage: StorageService) { }
 
@@ -109,23 +112,22 @@ export class BirthdayFormComponent implements OnInit {
     let self = this;
     this.errorMessages();
 
-    let stringDay = self.day.toString();;
-    let stringMonth = self.month.toString();
-    let stringYear = self.year.toString();
-    stringDay = this.checkIfNumberNeedsZero(self.day)
-    // console.log('stringDay top: ', stringDay)
-    stringMonth = this.checkIfNumberNeedsZero(self.month)
-    stringYear = this.checkIfNumberNeedsZero(self.year)
+    self.stringDay = self.day.toString();;
+    self.stringMonth = self.month.toString();
+    self.stringYear = self.year.toString();
+    self.stringDay = this.checkIfNumberNeedsZero(self.day)
+    self.stringMonth = this.checkIfNumberNeedsZero(self.month)
+    self.stringYear = this.checkIfNumberNeedsZero(self.year)
     if(this.monthError === '' && this.dayError === '' && this.yearError === '' && this.errorMsg === '') {
       if (this.year < 2015 || this.year === 2015 && this.month < 8) {
         // then you automatically have to return 8/3/2015 because this is the earliest day available
-        stringMonth = '08';
-        stringDay = '03'; 
-        stringYear = '2015'
+        self.stringMonth = '08';
+        self.stringDay = '03'; 
+        self.stringYear = '2015'
       } 
-      console.log('stringMonth: ', stringMonth, 'stringDay: ', stringDay)
-      this.nasaApiService.makeRequest(stringMonth, stringDay, stringYear).then((data) => {
-        console.log('stringMonth in makerequest: ', stringMonth, ' stringYear: ', stringYear)
+      console.log('self.stringMonth: ', self.stringMonth, ' self.stringDay: ',  self.stringDay)
+      this.nasaApiService.makeRequest(self.stringMonth,  self.stringDay, self.stringYear).then((data) => {
+        // console.log('self.stringMonth in makerequest: ', self.stringMonth, ' self.stringYear: ', self.stringYear)
         return data;
       }, function(error) {
         console.log('error: ', error)
@@ -148,33 +150,96 @@ export class BirthdayFormComponent implements OnInit {
             foundDayString = self.checkIfNumberNeedsZero(foundDay)
             foundMonthString = self.checkIfNumberNeedsZero(foundMonth) 
 
-            this.nasaApiService.makeRequest(foundMonthString, foundDayString, foundYear).then((birthdayData: string) => {
+            this.nasaApiService.makeRequest(foundMonthString, foundDayString, foundYear).then((birthdayData: string) => { // entered correct
               birthdayData = JSON.parse(birthdayData)
-              imageName = birthdayData[0]['image']
-              self.nasaApiService.imageRequest(imageName, foundDayString, foundMonthString, foundYear).then((imageUrl) => {
-                self.imageReturned = true;
-                self.birthDayDate = "Your birthday wasn't found, but here is the image of the Earth from the closest date. Date is: " + foundMonthString + '/' + foundDayString + '/' + foundYearString;
-                self.imageUrl = imageUrl.toString();
-              })
+              // imageName = birthdayData[0]['image']
+              // if there is more than one image found 
+              self.stringDay = foundDayString;
+              self.stringMonth = foundMonthString;
+              self.stringYear = foundYear;
+              if(birthdayData.length > 1) {
+                this.compileSlideShow(birthdayData)
+                this.multiples = true;
+              } else {
+                imageName = birthdayData[0]['image']
+                self.multiples = false;
+                self.nasaApiService.imageRequest(imageName, foundDayString, foundMonthString, foundYear).then((imageUrl) => {
+                  self.imageReturned = true;
+                  self.imageUrl = imageUrl.toString();
+                })
+              } // end of if
+              self.birthDayDate = "Your birthday wasn't found, but here is the image of the Earth from the closest date. Date is: " + foundMonthString + '/' + foundDayString + '/' + foundYearString;
             })
           })
         } else {
-          imageName = birthdayData[0]['image']
-          console.log('stringday: ', stringDay)
-          self.nasaApiService.imageRequest(imageName, stringDay, stringMonth, stringYear).then((imageUrl) => {
-            self.imageReturned = true;
-            self.birthDayDate = "Your birthday was found! " + stringMonth + '/' +stringDay + '/' + stringYear;
-            self.imageUrl = imageUrl.toString();
-          })
+          // console.log(' self.stringday: ',  self.stringDay)
+          // if there were a lot of birthday images found than get all of teh images
+          console.log('bottom birthdayData: ', birthdayData) 
+          // loop through all the birthday data and get all the images 
+          if(birthdayData.length > 1) {
+            this.compileSlideShow(birthdayData)
+            this.multiples = true;
+          } else {
+            imageName = birthdayData[0]['image']
+            self.multiples = false;
+            self.nasaApiService.imageRequest(imageName,  self.stringDay, self.stringMonth, self.stringYear).then((imageUrl) => {
+              self.imageReturned = true;
+              self.imageUrl = imageUrl.toString();
+            })
+          } // end of if
+          return self.birthDayDate = "Your birthday was found! " + self.stringMonth + '/' + self.stringDay + '/' + self.stringYear;
         }
       })
     }
   }
+
+  compileSlideShow = (birthdayDataList) => {
+    let imageName;
+    let self = this;
+    for(let i = 0; i < birthdayDataList.length; i++) {
+      imageName = birthdayDataList[i]['image']
+      self.nasaApiService.imageRequest(imageName,  self.stringDay, self.stringMonth, self.stringYear).then((imageUrl) => {
+        self.imageReturned = true;
+        // self.imageUrl = imageUrl.toString();
+        self.imagesArray.push(imageUrl.toString())
+      }).then((data) => {
+        // start the slide show
+        // the first time this runs the first element in the array needs a class of active
+        if(i === birthdayDataList.length - 1) {
+          self.showSlides(self.slideIndex);
+        }
+      })
+    } // end of for loop
+  }
+
+  changeSlides = (n) => {
+    this.showSlides(this.slideIndex += n);
+  }
   
-  saveImage = () => {
-    console.log('this.imageUrl was clicked: ', this.imageUrl)
-    this.savedImages = this.storage.get('savedImages')
-    this.savedImages.push(this.imageUrl);
-    this.storage.set('savedImages', this.savedImages);
-  } 
+  showSlides = (n) => {
+    let i;
+    let slides = document.getElementsByClassName("slideImage") as HTMLCollectionOf<HTMLElement>;
+    console.log('slides: ', slides)
+    if (n > slides.length) {
+      this.slideIndex = 1
+    } 
+    if (n < 1) {
+      this.slideIndex = slides.length
+    }
+    
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none"; 
+    }
+
+    slides[this.slideIndex-1].style.display = "block"; 
+    console.log('slides[this.slideIndex-1]: ', slides[this.slideIndex - 1])
+    slides[this.slideIndex-1].classList.add('active')
+  }
+
+  goBack = () => {
+    this.imageReturned = false;
+    this.day = null;
+    this.month = null;
+    this.year = null;
+  }
 }
