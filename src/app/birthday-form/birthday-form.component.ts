@@ -212,13 +212,13 @@ export class BirthdayFormComponent implements OnInit {
     } // end of for loop
   }
 
-  plusSlides = (n) => {
+  changeSlides = (n) => {
     this.showSlides(this.slideIndex += n);
   }
   
   showSlides = (n) => {
-    var i;
-    var slides = document.getElementsByClassName("slideImage") as HTMLCollectionOf<HTMLElement>;
+    let i;
+    let slides = document.getElementsByClassName("slideImage") as HTMLCollectionOf<HTMLElement>;
     console.log('slides: ', slides)
     if (n > slides.length) {
       this.slideIndex = 1

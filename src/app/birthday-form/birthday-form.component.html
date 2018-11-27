@@ -22,8 +22,8 @@
         <div class="slideImage fade" *ngFor="let image of imagesArray">
             <img src="{{image}}" class="earthImg" width="100%" height="auto" alt="">
         </div>
-        <a class="prev" *ngIf="multiples === true" (click)="plusSlides(-1)">&#10094;</a>
-        <a class="next" *ngIf="multiples === true" (click)="plusSlides(1)">&#10095;</a>
+        <a class="previous" *ngIf="multiples === true" (click)="changeSlides(-1)">&#10094;</a>
+        <a class="next" *ngIf="multiples === true" (click)="changeSlides(1)">&#10095;</a>
       </div><!-- end of slideshow -->
     </div>
   </article>
