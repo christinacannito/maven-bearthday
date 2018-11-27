@@ -119,12 +119,6 @@ export class BirthdayFormComponent implements OnInit {
     self.stringMonth = this.checkIfNumberNeedsZero(self.month)
     self.stringYear = this.checkIfNumberNeedsZero(self.year)
     if(this.monthError === '' && this.dayError === '' && this.yearError === '' && this.errorMsg === '') {
-      if (this.year < 2015 || this.year === 2015 && this.month < 8) {
-        // then you automatically have to return 8/3/2015 because this is the earliest day available
-        self.stringMonth = '08';
-        self.stringDay = '03'; 
-        self.stringYear = '2015'
-      } 
       console.log('self.stringMonth: ', self.stringMonth, ' self.stringDay: ',  self.stringDay)
       this.nasaApiService.makeRequest(self.stringMonth,  self.stringDay, self.stringYear).then((data) => {
         // console.log('self.stringMonth in makerequest: ', self.stringMonth, ' self.stringYear: ', self.stringYear)
@@ -138,6 +132,13 @@ export class BirthdayFormComponent implements OnInit {
         console.log('birthdayData: ', birthdayData)
         if(birthdayData[0] === undefined) {
           let compiledYear = [self.year, self.month - 1, self.day];
+          if (this.year < 2015 || this.year === 2015 && this.month < 8) {
+            // then you automatically have to return 8/3/2015 because this is the earliest day available
+            self.stringMonth = '08';
+            self.stringDay = '03'; 
+            self.stringYear = '2015'
+            compiledYear = [2015, 7 , 3]
+          } 
           self.nasaApiService.getAllAvailableDates().then((data) => { // refactor to make this call only once
             return self.findClosestDate(compiledYear, data)
           }).then((foundDate) => {
