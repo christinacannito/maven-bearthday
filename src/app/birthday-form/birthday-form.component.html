@@ -1,3 +1,31 @@
-<p>
-  birthday-form works!
-</p>
+<section>
+  <article id="formContent" *ngIf="imageReturned === false">
+    <h1>Enter in your birthday:</h1>
+    <form id="dateForm">
+      <input type="number" min="1" max="12" [(ngModel)]="month" name="month" placeholder="mm">
+      <input id="day" min="1" max="31" type="number" [(ngModel)]="day" name="day" placeholder="dd">
+      <input type="number" [(ngModel)]="year" name="year" placeholder="yyyy">
+      <button id="submitBDay" (click)="submitBirthday()">Enter</button>
+      <p class="error">{{errorMsg }}</p>
+      <p class="error">{{monthError}}</p>
+      <p class="error">{{dayError}}</p>
+      <p class="error">{{tyearError}}</p>
+      <p class="error">{{errorFromAPI}}</p>
+    </form>
+  </article>
+  <article>  
+    <div id="returnImage" *ngIf="imageReturned === true">
+      <button (click)="goBack()" id="goBackBtn">Go back to form</button>
+      <h2>Your Bearthday image!</h2>
+      <h3>{{birthDayDate}}</h3>
+      <img src="{{imageUrl}}" class="earthImg" width="100%" height="auto" alt="">
+      <div class="slideShow">
+        <div class="slideImage fade" *ngFor="let image of imagesArray">
+            <img src="{{image}}" class="earthImg" width="100%" height="auto" alt="">
+        </div>
+        <a class="previous" *ngIf="multiples === true" (click)="changeSlides(-1)">&#10094;</a>
+        <a class="next" *ngIf="multiples === true" (click)="changeSlides(1)">&#10095;</a>
+      </div><!-- end of slideshow -->
+    </div>
+  </article>
+</section>

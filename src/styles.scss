@@ -1,1 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+// global styles
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+html {
+    body {
+        background-color: #000;
+        color: #FFF;
+        font-family: 'Space Mono', monospace;
+    }
+}
