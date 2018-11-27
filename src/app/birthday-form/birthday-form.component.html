@@ -6,10 +6,11 @@
       <input id="day" min="1" max="31" type="number" [(ngModel)]="day" name="day" placeholder="dd">
       <input type="number" [(ngModel)]="year" name="year" placeholder="yyyy">
       <button id="submitBDay" (click)="submitBirthday()">Enter</button>
-      <p class="error">{{this.errorMsg }}</p>
-      <p class="error">{{this.monthError}}</p>
-      <p class="error">{{this.dayError}}</p>
-      <p class="error">{{this.yearError}}</p>
+      <p class="error">{{errorMsg }}</p>
+      <p class="error">{{monthError}}</p>
+      <p class="error">{{dayError}}</p>
+      <p class="error">{{tyearError}}</p>
+      <p class="error">{{errorFromAPI}}</p>
     </form>
   </article>
   <article>  

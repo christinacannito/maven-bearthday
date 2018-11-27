@@ -30,6 +30,7 @@ export class BirthdayFormComponent implements OnInit {
   imagesArray: Array<string> = [];
   slideIndex: number = 1;
   multiples: boolean = false;
+  errorFromAPI: string = '';
 
   constructor(private nasaApiService: NasaApiService, @Inject(SESSION_STORAGE) private storage: StorageService) { }
 
@@ -131,6 +132,7 @@ export class BirthdayFormComponent implements OnInit {
         return data;
       }, function(error) {
         console.log('error: ', error)
+        return error;
       }).then((birthdayData: string) => {
         birthdayData = JSON.parse(birthdayData)
         let imageName;
@@ -166,9 +168,15 @@ export class BirthdayFormComponent implements OnInit {
                 self.nasaApiService.imageRequest(imageName, foundDayString, foundMonthString, foundYear).then((imageUrl) => {
                   self.imageReturned = true;
                   self.imageUrl = imageUrl.toString();
+                }, function(error) {
+                  console.log('error;: ', error) // you can see this
+                  self.errorFromAPI = 'Error from API, image is: ' + error
+                  throw new Error('abort promise chain');
                 })
               } // end of if
               self.birthDayDate = "Your birthday wasn't found, but here is the image of the Earth from the closest date. Date is: " + foundMonthString + '/' + foundDayString + '/' + foundYearString;
+            }, function(error) {
+              return error;
             })
           })
         } else {
@@ -185,6 +193,8 @@ export class BirthdayFormComponent implements OnInit {
             self.nasaApiService.imageRequest(imageName,  self.stringDay, self.stringMonth, self.stringYear).then((imageUrl) => {
               self.imageReturned = true;
               self.imageUrl = imageUrl.toString();
+            }, function(error) {
+              return error
             })
           } // end of if
           return self.birthDayDate = "Your birthday was found! " + self.stringMonth + '/' + self.stringDay + '/' + self.stringYear;
@@ -201,6 +211,7 @@ export class BirthdayFormComponent implements OnInit {
       self.nasaApiService.imageRequest(imageName,  self.stringDay, self.stringMonth, self.stringYear).then((imageUrl) => {
         self.imageReturned = true;
         // self.imageUrl = imageUrl.toString();
+        console.log('imageUrl: ', imageUrl);
         self.imagesArray.push(imageUrl.toString())
       }).then((data) => {
         // start the slide show
