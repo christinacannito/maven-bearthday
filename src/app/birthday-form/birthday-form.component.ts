@@ -29,7 +29,7 @@ export class BirthdayFormComponent implements OnInit {
   stringYear: string;
   imagesArray: Array<string> = [];
   slideIndex: number = 1;
-  dateForm;
+  multiples: boolean = false;
 
   constructor(private nasaApiService: NasaApiService, @Inject(SESSION_STORAGE) private storage: StorageService) { }
 
@@ -159,8 +159,10 @@ export class BirthdayFormComponent implements OnInit {
               self.stringYear = foundYear;
               if(birthdayData.length > 1) {
                 this.compileSlideShow(birthdayData)
+                this.multiples = true;
               } else {
                 imageName = birthdayData[0]['image']
+                self.multiples = false;
                 self.nasaApiService.imageRequest(imageName, foundDayString, foundMonthString, foundYear).then((imageUrl) => {
                   self.imageReturned = true;
                   self.imageUrl = imageUrl.toString();
@@ -176,8 +178,10 @@ export class BirthdayFormComponent implements OnInit {
           // loop through all the birthday data and get all the images 
           if(birthdayData.length > 1) {
             this.compileSlideShow(birthdayData)
+            this.multiples = true;
           } else {
             imageName = birthdayData[0]['image']
+            self.multiples = false;
             self.nasaApiService.imageRequest(imageName,  self.stringDay, self.stringMonth, self.stringYear).then((imageUrl) => {
               self.imageReturned = true;
               self.imageUrl = imageUrl.toString();
